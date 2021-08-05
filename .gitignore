@@ -1,0 +1,7 @@
+.idea/*
+target/
+output/*
+release/*
+debug/*
+thumbs.db
+.DS_Store
