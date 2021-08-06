@@ -1,6 +1,5 @@
 package org.web.dao;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +16,19 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> listUsers() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from User", User.class).getResultList();
+        return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
     }
 
 
     @Override
     public void save(User user) {
-        Session session = sessionFactory.getCurrentSession();
-        session.save(user);
+        sessionFactory.getCurrentSession().save(user);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public User read(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("from User " +
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("from User " +
                 "where id = :userId");
         query.setParameter("userId", id);
         return query.getSingleResult();
@@ -41,8 +37,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public void delete(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("delete from User " +
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("delete from User " +
                 "where id = :userId");
         query.setParameter("userId", id);
         query.executeUpdate();
@@ -51,8 +46,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public void update(int id, User user) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("update from User set firstName = :firstName, " +
+        Query<User> query = sessionFactory.getCurrentSession().createQuery("update from User set firstName = :firstName, " +
                 "lastName = :lastName, salary = :salary where id = :id");
         query.setParameter("firstName", user.getFirstName());
         query.setParameter("lastName", user.getLastName());
