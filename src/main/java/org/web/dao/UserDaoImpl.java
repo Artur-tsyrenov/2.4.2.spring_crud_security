@@ -1,53 +1,49 @@
 package org.web.dao;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.web.models.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<User> listUsers() {
-        return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
+        return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
 
     @Override
     public void save(User user) {
-        sessionFactory.getCurrentSession().save(user);
+        entityManager.persist(user);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public User read(int id) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("from User " +
-                "where id = :userId");
-        query.setParameter("userId", id);
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id = :id", User.class);
+        query.setParameter("id", id);
         return query.getSingleResult();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void delete(int id) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("delete from User " +
-                "where id = :userId");
-        query.setParameter("userId", id);
+        Query query = entityManager.createQuery("delete from User u where u.id = :id");
+        query.setParameter("id", id);
         query.executeUpdate();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void update(int id, User user) {
-        Query<User> query = sessionFactory.getCurrentSession().createQuery("update from User set firstName = :firstName, " +
-                "lastName = :lastName, salary = :salary where id = :id");
+        Query query = entityManager.createQuery("update User u set u.firstName = :firstName, " +
+                "u.lastName = :lastName, u.salary = :salary where u.id = :id");
         query.setParameter("firstName", user.getFirstName());
         query.setParameter("lastName", user.getLastName());
         query.setParameter("salary", user.getSalary());
