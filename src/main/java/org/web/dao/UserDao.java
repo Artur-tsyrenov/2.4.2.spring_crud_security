@@ -1,5 +1,6 @@
 package org.web.dao;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.web.models.User;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface UserDao {
 
 
     void delete(int id);
+
+    UserDetails getUserByName(String username);
+
+    User getUserByUsername(String username);
 }

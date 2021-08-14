@@ -1,5 +1,6 @@
 package org.web.dao;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.web.models.User;
 
@@ -34,10 +35,26 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        TypedQuery<User> query = entityManager.createQuery("select u from User u " +
+                "where u.username = :username", User.class);
+        query.setParameter("username", username);
+        return query.getSingleResult();
+    }
+
+    @Override
     public void delete(int id) {
         Query query = entityManager.createQuery("delete from User u where u.id = :id");
         query.setParameter("id", id);
         query.executeUpdate();
+    }
+
+    @Override
+    public UserDetails getUserByName(String username) {
+        TypedQuery<User> query = entityManager.createQuery("select u from User u " +
+                "where u.username = :username", User.class);
+        query.setParameter("username", username);
+        return query.getSingleResult();
     }
 
     @Override
